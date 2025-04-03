@@ -2,12 +2,17 @@ package main
 
 import (
 	"bufio"
+	"container/heap"
 	"fmt"
 	"math"
 	"os"
 	"sort"
 	"strconv"
+	"strings"
 )
+
+var sc = bufio.NewScanner(os.Stdin)
+var wr = bufio.NewWriter(os.Stdout)
 
 type PriorityQueue []int
 
@@ -23,20 +28,17 @@ func (pq PriorityQueue) Swap(i, j int) {
 	pq[i], pq[j] = pq[j], pq[i]
 }
 
-func (pq *PriorityQueue) Push(x interface{}) {
+func (pq *PriorityQueue) Push(x any) {
 	*pq = append(*pq, x.(int))
 }
 
-func (pq *PriorityQueue) Pop() int {
+func (pq *PriorityQueue) Pop() any {
 	old := *pq
 	n := len(old)
 	res := old[n-1]
 	*pq = old[:n-1]
 	return res
 }
-
-var sc = bufio.NewScanner(os.Stdin)
-var wr = bufio.NewWriter(os.Stdout)
 
 func out(x ...interface{}) {
 	fmt.Fprintln(wr, x...)
@@ -159,9 +161,23 @@ func upperBound(a []int, x int) int {
 
 func main() {
 	defer wr.Flush()
-	sc.Split(bufio.ScanWords)
 	sc.Buffer([]byte{}, math.MaxInt32)
-	// this template is new version.
-	// use getI(), getS(), getInts(), getF()
 
+	pq := &PriorityQueue{}
+	heap.Init(pq)
+
+	Q := getI()
+	for i := 0; i < Q; i++ {
+		query := getS()
+		token := strings.Fields(query)
+		switch token[0] {
+		case "1":
+			v, _ := strconv.Atoi(token[1])
+			heap.Push(pq, v)
+		case "2":
+			out((*pq)[0])
+		case "3":
+			heap.Pop(pq)
+		}
+	}
 }
