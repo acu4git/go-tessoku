@@ -35,7 +35,7 @@ func main() {
 
 	dp := make([]int, n+1)
 	for i := 2; i <= n; i++ {
-		dp[i] = math.MinInt
+		dp[i] = math.MinInt // required
 	}
 	for i := 1; i < n; i++ {
 		dp[a[i]] = max(dp[i]+100, dp[a[i]])
