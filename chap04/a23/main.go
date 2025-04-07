@@ -42,33 +42,30 @@ func main() {
 	for i := range dp {
 		dp[i] = make([]int, 1<<n)
 		for j := range dp[i] {
-			dp[i][j] = math.MaxInt
+			dp[i][j] = math.MaxInt16
 		}
 	}
+
 	dp[0][0] = 0
-
-	for i := 0; i <= m-1; i++ {
+	for i := 1; i <= m; i++ {
 		for j := 0; j < (1 << n); j++ {
-			if dp[i][j] == math.MaxInt {
-				continue
-			}
-			t := 0
+			coupon := 0
 			for k := n; k >= 1; k-- {
-				t <<= 1
-				t |= a[i+1][k]
+				coupon <<= 1
+				coupon |= a[i][k]
 			}
 
-			dp[i+1][j] = min(dp[i+1][j], dp[i][j])
-			if (j | t) < (1 << n) {
-				dp[i+1][j|t] = min(dp[i+1][j|t], dp[i][j]+1)
+			dp[i][j] = min(dp[i][j], dp[i-1][j])
+			if (j | coupon) < (1 << n) {
+				dp[i][j|coupon] = min(dp[i][j|coupon], dp[i-1][j]+1)
 			}
 		}
 	}
 
-	if dp[m][1<<n-1] == math.MaxInt {
+	if dp[m][(1<<n)-1] == math.MaxInt16 {
 		fmt.Fprintln(wr, -1)
 	} else {
-		fmt.Fprintln(wr, dp[m][1<<n-1])
+		fmt.Fprintln(wr, dp[m][(1<<n)-1])
 	}
 }
 
